@@ -26,8 +26,8 @@ informe_prep_frase_avanzado = []
 informe_ad_frase_avanzado = []
 
 repeticion_informe = ['No se analizó la aliteración de palabras en el texto']
-path = 'C:\\Master Python\\Analizador de textos\\DICCIONARIO'
-path_carga = 'C:\\Master Python\\Analizador de textos\\INFORME'
+path = 'D:\\TRABAJO\\PYTHON\\AnalizadorTextos\\DICCIONARIO'
+path_carga = 'D:\\TRABAJO\\PYTHON\\AnalizadorTextos'
 
 def pausa():
     input('Pulsa Enter para continuar')
@@ -87,20 +87,46 @@ def lectura_ficheros():
     lectura.close() 
 
 def carga_informe(x):
-    fichero = open( path_carga + '/informe.txt', 'w', encoding='utf-8')
-    escri = f'SU TEXTO: {x},\n\nCARÁCTERES: {contar_caract[0]}\nPALABRAS: {contar_words[0]}\n{informe_ad[0]}\n{informe_adj[0]}\n{informe_prep[0]}\n{pala_mente[0]}\n{pala_su[0]}\n \nPALABRAS REPETIDAS MÁS DE 3 VECES: {repeticion_informe}'
-    fichero.write(escri)
-    fichero.close()
+    informe_dir = path_carga + '/INFORME'
+    os.makedirs(informe_dir, exist_ok=True)  # ✅ Esto crea la carpeta si no existe
+
+    with open(informe_dir + '/informe.txt', 'w', encoding='utf-8') as fichero:
+        escri = f'SU TEXTO: {x}\n\nCARACTERES: {contar_caract[0]}\nPALABRAS: {contar_words[0]}\n{informe_ad[0]}\n{informe_adj[0]}\n{informe_prep[0]}\n{pala_mente[0]}\n{pala_su[0]}\n\nPALABRAS REPETIDAS MÁS DE 3 VECES: {repeticion_informe}'
+        fichero.write(escri)
+
     print('')
-    input('Informe generado. Pulsa Enter para continuar') 
+    input('Informe generado. Pulsa Enter para continuar')
     os.system('cls')
     menu_inicial()
-
 #Dejo texto de prueba. De introducir algún input, se deberá hacer de párrafor a párrafo. Intentar meter más de un párrafo da un error sobre el visual studio code (Entiende los saltos de linea como ENTER)
 
-x = 'Carlos asintió y volvió a centrar su mirada en Don Julian, que hablaba sobre algo que hizo Jesús. No consiguió recuperar el hilo. Se sentía ajeno a una historia que ya cruzaba el nudo, y el esfuerzo lo animó a desplegarse de nuevo, cansadamente, sobre el hastío. Es un ritual anodino para el niño. Una congestión de rutinas barrocas en aquel lugar, la casa de Dios, que no era más que un espacio vacío y silencioso donde reposaban los ídolos de los santos. Los techos altos entre las columnas de piedra no eran más que una metáfora del mismo tedio, sobre como se estiran los segundos más allá de lo permitido. El gris del granito predominaba sobre las vidrieras coloridas. Las estatuas, las velas de luz eléctrica, la pulcra madera de colores oscuros. Todo parecía predispuesto a contribuir al tedio.'
+# x = input("INTRODUCE EL PÁRRAFO DE UN TEXTO: ")
 
-#x = input("INTRODUCE EL PÁRRAFO DE UN TEXTO")
+from docx import Document
+
+def leer_docx(ruta_archivo):
+    doc = Document(ruta_archivo)
+    texto = "\n".join([p.text for p in doc.paragraphs])
+    print(texto)
+    return texto
+
+def leer_txt(ruta_archivo):
+    with open(ruta_archivo, 'r', encoding='utf-8') as f:
+        return f.read()
+
+modo = input("¿Quieres introducir texto (1), leer .txt (2) o .docx (3)? ")
+
+if modo == "1":
+    x = input("INTRODUCE EL PÁRRAFO DE UN TEXTO: ")
+elif modo == "2":
+    ruta = input("Introduce la ruta del archivo .txt: ")
+    x = leer_txt(ruta)
+elif modo == "3":
+    ruta = input("Introduce la ruta del archivo .docx: ")
+    x = leer_docx(ruta)
+else:
+    print("Opción no válida.")
+
 
 lectura_ficheros()
 
